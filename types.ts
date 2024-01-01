@@ -1,7 +1,7 @@
 export interface MintTask {
   quantity: number
   rpc: string
-  maxPerGas: string
+  maxPerGasFee: string
   mintText: string
   mintData?: string
 }

@@ -29,7 +29,7 @@ export async function mint(mintTask: MintTask) {
   ])
   const data = ethers.hexlify(ethers.toUtf8Bytes(mintTask.mintText))
   const gasPrice = feeData?.gasPrice!
-  let gasLimit = new BigNumber(mintTask.maxPerGas).div(toNumber(gasPrice)).toString()
+  let gasLimit = new BigNumber(mintTask.maxPerGasFee).div(toNumber(gasPrice)).toString()
   gasLimit = toNonExponential(gasLimit)
 
   const tx: TransactionLike = {
