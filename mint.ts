@@ -9,13 +9,12 @@ import {
 } from 'ethers'
 import type { TransactionLike } from 'ethers'
 import BigNumber from 'bignumber.js'
-import type { Inscription } from './types'
-import config from './config'
 import { toNonExponential } from './util'
+import type { MintTask } from './types'
 
-export async function mint(quantity: number, inscription: Inscription) {
+export async function mint(mintTask: MintTask) {
   const startTime = +new Date()
-  const provider = new JsonRpcProvider(config.rpc[0])
+  const provider = new JsonRpcProvider(mintTask.rpc)
   const wallet = new Wallet(import.meta.env.PRIVATE_KEY as string, provider)
   const address = await wallet.getAddress()
   const balance = await provider.getBalance(address)
@@ -28,9 +27,9 @@ export async function mint(quantity: number, inscription: Inscription) {
     provider.getNetwork(),
     provider.getFeeData().catch(() => { return undefined }),
   ])
-  const data = ethers.hexlify(ethers.toUtf8Bytes(inscription.mintText))
+  const data = ethers.hexlify(ethers.toUtf8Bytes(mintTask.mintText))
   const gasPrice = feeData?.gasPrice!
-  let gasLimit = new BigNumber(inscription.maxPerGas).div(toNumber(gasPrice)).toString()
+  let gasLimit = new BigNumber(mintTask.maxPerGas).div(toNumber(gasPrice)).toString()
   gasLimit = toNonExponential(gasLimit)
 
   const tx: TransactionLike = {
@@ -55,7 +54,7 @@ export async function mint(quantity: number, inscription: Inscription) {
 
   const txHashs = []
   let index = 0
-  while(index < quantity) {
+  while(index < mintTask.quantity) {
     const result = await sendMintTx(wallet, tx)
     if (result.ok) {
       console.log(`[${index + 1}] minted: ${result.txHash} ${result.usedTime}s`)

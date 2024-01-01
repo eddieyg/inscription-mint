@@ -1,17 +1,19 @@
-import type { Inscription } from './types'
+import type { MintTask } from './types'
 
-const rpc = [
-  'https://avalanche.public-rpc.com',
-]
-
-const inscription: Record<string, Inscription> = {
-  shenlong: {
-    maxPerGas: '0.0006',
-    mintText: 'data:,{"p":"asc-20","op":"mint","tick":"ShenLong","amt":"1"}',
-  }
+const rpcs = {
+  avalanche: 'https://avalanche.public-rpc.com'
 }
 
+const mintTasks: MintTask[] = [
+  {
+    quantity: 8,
+    rpc: rpcs.avalanche,
+    maxPerGas: '0.0006',
+    mintText: 'data:,{"p":"asc-20","op":"mint","tick":"ShenLong","amt":"1"}',
+  },
+]
+
 export default{
-  rpc,
-  inscription
+  rpcs,
+  mintTasks
 }
